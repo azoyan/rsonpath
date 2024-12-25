@@ -397,13 +397,13 @@ impl Automaton {
     /// use rsonpath::automaton::*;
     /// let path = "$.personal.details.contact.information.phones.home";
     /// let automation = Automaton::new(&rsonpath_syntax::parse(path).unwrap()).unwrap();
-    /// let jsonpath_strings = automation.unquoted_jsonpath_segments();
+    /// let jsonpath_strings = automation.unquoted_jsonstring_patterns();
     ///
-    /// println!("{:?}", jsonpath_strings); // ["personal", "details", "contact", "information", "phones", "home"]
+    /// assert_eq!(vec!["personal", "details", "contact", "information", "phones", "home"], jsonpath_strings);
     /// ```
     #[must_use]
     #[inline(always)]
-    pub fn unquoted_jsonpath_segments(&self) -> Vec<&str> {
+    pub fn unquoted_jsonstring_patterns(&self) -> Vec<&str> {
         self.states
             .iter()
             .flat_map(|state| state.member_transitions.iter().map(|(pattern, _)| pattern.unquoted()))
@@ -418,7 +418,7 @@ impl Automaton {
     /// use rsonpath::automaton::*;
     /// let path = "$.personal.details.contact.information.phones.home";
     /// let automation = Automaton::new(&rsonpath_syntax::parse(path).unwrap()).unwrap();
-    /// let jsonpath_strings = automation.quoted_jsonpath_segments();
+    /// let jsonpath_strings = automation.quoted_jsonstring_patterns();
     ///
     /// assert_eq!(
     ///     vec![
@@ -434,7 +434,7 @@ impl Automaton {
     /// ```
     #[must_use]
     #[inline(always)]
-    pub fn quoted_jsonpath_segments(&self) -> Vec<&str> {
+    pub fn quoted_jsonstring_patterns(&self) -> Vec<&str> {
         self.states
             .iter()
             .flat_map(|state| state.member_transitions.iter().map(|(pattern, _)| pattern.quoted()))

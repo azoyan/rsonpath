@@ -210,15 +210,15 @@ impl MainEngine {
     /// let path = "$.personal.details.contact.information.phones.home";
     /// let automation = Automaton::new(&rsonpath_syntax::parse(path).unwrap()).unwrap();
     /// let engine = RsonpathEngine::from_compiled_query(automation);
-    /// let jsonpath_strings = engine.unquoted_jsonpath_segments();
+    /// let jsonpath_strings = engine.unquoted_jsonstring_patterns();
     ///
     /// assert_eq!(vec!["personal", "details", "contact", "information", "phones", "home"], jsonpath_strings);
     /// ```
 
     #[must_use]
     #[inline]
-    pub fn unquoted_jsonpath_segments(&self) -> Vec<&str> {
-        self.automaton.unquoted_jsonpath_segments()
+    pub fn unquoted_jsonstring_patterns(&self) -> Vec<&str> {
+        self.automaton.unquoted_jsonstring_patterns()
     }
     /// Returns JSONPath segments as quoted &str from an MainEngine instance
     ///
@@ -231,14 +231,14 @@ impl MainEngine {
     /// let path = "$.personal.details.contact.information.phones.home";
     /// let automation = Automaton::new(&rsonpath_syntax::parse(path).unwrap()).unwrap();
     /// let engine = RsonpathEngine::from_compiled_query(automation);
-    /// let jsonpath_strings = engine.quoted_jsonpath_segments();
+    /// let jsonpath_strings = engine.quoted_jsonstring_patterns();
     ///
     /// assert_eq!(vec!["personal", "details", "contact", "information", "phones", "home"], jsonpath_strings);
     /// ```
     #[must_use]
     #[inline]
-    pub fn quoted_jsonpath_segments(&self) -> Vec<&str> {
-        self.automaton.quoted_jsonpath_segments()
+    pub fn quoted_jsonstring_patterns(&self) -> Vec<&str> {
+        self.automaton.quoted_jsonstring_patterns()
     }
 }
 
