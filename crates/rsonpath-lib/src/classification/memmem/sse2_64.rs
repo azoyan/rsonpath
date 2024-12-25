@@ -109,7 +109,7 @@ where
         label: &StringPattern,
         mut offset: usize,
     ) -> Result<Option<(usize, I::Block<'i, SIZE>)>, InputError> {
-        let classifier = vector_128::BlockClassifier128::new(label.unquoted()[0], b'"');
+        let classifier = vector_128::BlockClassifier128::new(label.unquoted_bytes()[0], b'"');
         let mut previous_block: u64 = 0;
 
         while let Some(block) = self.iter.next().e()? {
@@ -151,13 +151,13 @@ where
         label: &StringPattern,
         mut offset: usize,
     ) -> Result<Option<(usize, I::Block<'i, SIZE>)>, InputError> {
-        if label.unquoted().is_empty() {
+        if label.unquoted_bytes().is_empty() {
             return self.find_empty(label, offset);
-        } else if label.unquoted().len() == 1 {
+        } else if label.unquoted_bytes().len() == 1 {
             return self.find_letter(label, offset);
         }
 
-        let classifier = vector_128::BlockClassifier128::new(label.unquoted()[0], label.unquoted()[1]);
+        let classifier = vector_128::BlockClassifier128::new(label.unquoted_bytes()[0], label.unquoted_bytes()[1]);
         let mut previous_block: u64 = 0;
 
         while let Some(block) = self.iter.next().e()? {

@@ -212,7 +212,7 @@ impl Display for NondeterministicAutomaton {
         return Ok(());
 
         fn stringify_label(label: &StringPattern) -> &str {
-            std::str::from_utf8(label.unquoted()).expect("labels must be valid utf8")
+            label.unquoted()
         }
     }
 }

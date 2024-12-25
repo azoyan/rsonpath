@@ -9,7 +9,7 @@ impl<T: AsRef<[u8]>> SliceSeekable for T {
             return false;
         }
         let slice = &bytes[from..to];
-        member.quoted() == slice && (from == 0 || bytes[from - 1] != b'\\')
+        member.quoted_bytes() == slice && (from == 0 || bytes[from - 1] != b'\\')
     }
 
     fn seek_backward(&self, from: usize, needle: u8) -> Option<usize> {

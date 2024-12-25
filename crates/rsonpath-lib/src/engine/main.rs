@@ -199,7 +199,7 @@ impl Engine for MainEngine {
 }
 
 impl MainEngine {
-    /// Returns JSONPath segments as unquoted strings from an MainEngine instance
+    /// Returns JSONPath segments as unquoted &str from an MainEngine instance
     ///
     ///  It traverses the states and transitions of the internal automaton to collect the unquoted patterns representing the individual components of the JSONPath query.
     /// # Example
@@ -210,14 +210,35 @@ impl MainEngine {
     /// let path = "$.personal.details.contact.information.phones.home";
     /// let automation = Automaton::new(&rsonpath_syntax::parse(path).unwrap()).unwrap();
     /// let engine = RsonpathEngine::from_compiled_query(automation);
-    /// let jsonpath_strings = engine.unquoted_jsonpath_segments();
+    /// let jsonpath_strings = engine.unquoted_jsonstring_patterns();
     ///
-    /// println!("{:?}", jsonpath_strings); // ["personal", "details", "contact", "information", "phones", "home"]
+    /// assert_eq!(vec!["personal", "details", "contact", "information", "phones", "home"], jsonpath_strings);
+    /// ```
+
+    #[must_use]
+    #[inline]
+    pub fn unquoted_jsonstring_patterns(&self) -> Vec<&str> {
+        self.automaton.unquoted_jsonstring_patterns()
+    }
+    /// Returns JSONPath segments as quoted &str from an MainEngine instance
+    ///
+    ///  It traverses the states and transitions of the internal automaton to collect the unquoted patterns representing the individual components of the JSONPath query.
+    /// # Example
+    /// ```rust
+    /// use rsonpath::automaton::*;
+    /// use rsonpath::engine::RsonpathEngine;
+    /// use crate::rsonpath::engine::Compiler;
+    /// let path = "$.personal.details.contact.information.phones.home";
+    /// let automation = Automaton::new(&rsonpath_syntax::parse(path).unwrap()).unwrap();
+    /// let engine = RsonpathEngine::from_compiled_query(automation);
+    /// let jsonpath_strings = engine.quoted_jsonstring_patterns();
+    ///
+    /// assert_eq!(vec!["personal", "details", "contact", "information", "phones", "home"], jsonpath_strings);
     /// ```
     #[must_use]
     #[inline]
-    pub fn unquoted_jsonpath_segments(&self) -> Vec<String> {
-        self.automaton.unquoted_jsonpath_segments()
+    pub fn quoted_jsonstring_patterns(&self) -> Vec<&str> {
+        self.automaton.quoted_jsonstring_patterns()
     }
 }
 
@@ -682,7 +703,7 @@ where
     /// Check if the label ended with a colon at index `idx` matches the `member_name`.
     #[inline(always)]
     fn is_match(&self, idx: usize, member_name: &StringPattern) -> Result<bool, EngineError> {
-        let len = member_name.quoted().len();
+        let len = member_name.quoted_bytes().len();
 
         // The colon can be preceded by whitespace before the actual label.
         let closing_quote_idx = match self.input.seek_backward(idx - 1, b'"') {

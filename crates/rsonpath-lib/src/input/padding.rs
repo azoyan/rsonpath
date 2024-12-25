@@ -103,7 +103,7 @@ impl SliceSeekable for EndPaddedInput<'_> {
     #[inline(never)]
     fn is_member_match(&self, from: usize, to: usize, member: &StringPattern) -> bool {
         debug_assert!(from < to);
-        let other = member.quoted();
+        let other = member.quoted_bytes();
         self.cold_member_match(other, from, to)
     }
 }
@@ -161,7 +161,7 @@ impl SliceSeekable for TwoSidesPaddedInput<'_> {
     #[inline(never)]
     fn is_member_match(&self, from: usize, to: usize, member: &StringPattern) -> bool {
         debug_assert!(from < to);
-        let other = member.quoted();
+        let other = member.quoted_bytes();
         self.cold_member_match(other, from, to)
     }
 }
