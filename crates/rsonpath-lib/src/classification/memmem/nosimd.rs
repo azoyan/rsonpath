@@ -45,11 +45,11 @@ where
         label: &StringPattern,
         mut offset: usize,
     ) -> Result<Option<(usize, I::Block<'i, N>)>, InputError> {
-        let label_size = label.quoted().len();
-        let first_c = if label.unquoted().is_empty() {
+        let label_size = label.quoted_bytes().len();
+        let first_c = if label.unquoted_bytes().is_empty() {
             b'"'
         } else {
-            label.unquoted()[0]
+            label.unquoted_bytes()[0]
         };
 
         while let Some(block) = self.iter.next().e()? {

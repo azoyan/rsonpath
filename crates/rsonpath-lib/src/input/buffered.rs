@@ -229,7 +229,7 @@ impl<R: Read> Input for BufferedInput<R> {
 
         let bytes = buf.as_slice();
         let slice = &bytes[from..to];
-        Ok(member.quoted() == slice && (from == 0 || bytes[from - 1] != b'\\'))
+        Ok(member.quoted_bytes() == slice && (from == 0 || bytes[from - 1] != b'\\'))
     }
 }
 

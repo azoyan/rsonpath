@@ -230,7 +230,7 @@ impl Input for BorrowedBytes<'_> {
             let from = from - MAX_BLOCK_SIZE;
             let to = to - MAX_BLOCK_SIZE;
             let slice = &bytes[from..to];
-            Ok(member.quoted() == slice && (from == 0 || bytes[from - 1] != b'\\'))
+            Ok(member.quoted_bytes() == slice && (from == 0 || bytes[from - 1] != b'\\'))
         } else {
             // This is a very expensive, cold path.
             Ok(self.as_padded_input().is_member_match(from, to, member))

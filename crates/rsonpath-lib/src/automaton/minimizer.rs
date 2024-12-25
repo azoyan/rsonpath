@@ -294,7 +294,7 @@ impl Minimizer {
                 | NfaState::Recursive(nfa::Transition::Member(label)) => {
                     debug!(
                         "Considering member transition {nfa_state} --{}-> {}",
-                        std::str::from_utf8(label.unquoted()).unwrap_or("[invalid utf8]"),
+                        label.unquoted(),
                         nfa_state.next()?,
                     );
                     // Add the target NFA state to the target superstate, or create a singleton

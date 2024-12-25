@@ -403,15 +403,41 @@ impl Automaton {
     /// ```
     #[must_use]
     #[inline(always)]
-    pub fn unquoted_jsonpath_segments(&self) -> Vec<String> {
+    pub fn unquoted_jsonpath_segments(&self) -> Vec<&str> {
         self.states
             .iter()
-            .flat_map(|state| {
-                state
-                    .member_transitions
-                    .iter()
-                    .map(|(pattern, _)| pattern.unquoted_str().to_string())
-            })
+            .flat_map(|state| state.member_transitions.iter().map(|(pattern, _)| pattern.unquoted()))
+            .collect()
+    }
+
+    /// Returns JSONPath segments as quoted &str from an Automation instance
+    ///
+    ///  It traverses the states and transitions of the internal automaton to collect the unquoted patterns representing the individual components of the JSONPath query.
+    /// # Example
+    /// ```rust
+    /// use rsonpath::automaton::*;
+    /// let path = "$.personal.details.contact.information.phones.home";
+    /// let automation = Automaton::new(&rsonpath_syntax::parse(path).unwrap()).unwrap();
+    /// let jsonpath_strings = automation.quoted_jsonpath_segments();
+    ///
+    /// assert_eq!(
+    ///     vec![
+    ///         "\"personal\"",
+    ///         "\"details\"",
+    ///         "\"contact\"",
+    ///         "\"information\"",
+    ///         "\"phones\"",
+    ///         "\"home\""
+    ///     ],
+    ///     jsonpath_strings
+    /// );
+    /// ```
+    #[must_use]
+    #[inline(always)]
+    pub fn quoted_jsonpath_segments(&self) -> Vec<&str> {
+        self.states
+            .iter()
+            .flat_map(|state| state.member_transitions.iter().map(|(pattern, _)| pattern.quoted()))
             .collect()
     }
 
@@ -529,12 +555,7 @@ impl Display for Automaton {
                 }
             }
             for (label, state) in &transitions.member_transitions {
-                writeln!(
-                    f,
-                    "  {i} -> {} [label=\"{}\"]",
-                    state.0,
-                    std::str::from_utf8(label.unquoted()).expect("labels to be valid utf8")
-                )?
+                writeln!(f, "  {i} -> {} [label=\"{}\"]", state.0, label.unquoted())?
             }
             writeln!(f, "  {i} -> {} [label=\"*\"]", transitions.fallback_state.0)?;
         }

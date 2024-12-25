@@ -26,7 +26,7 @@ where
     'i: 'r,
 {
     let block_idx = start_idx % N;
-    let label_size = label.quoted().len();
+    let label_size = label.quoted_bytes().len();
 
     for (i, c) in first_block[block_idx..].iter().copied().enumerate() {
         let j = start_idx + i;
